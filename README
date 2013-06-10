@@ -1,0 +1,69 @@
+Simple command-line Regex file renamer
+
+Usage:
+  rxmv [-x] regex formatString file(s)
+
+This program will match each of the files with the given regex, then substitute into the given formatString
+to generate the new filename.
+
+If the '-x' flag is passed, the program will rename the files.  
+If not, it will print out a report of what the renaming would look like.
+
+
+Regular Expressions are as understood by Boost:
+http://www.boost.org/doc/libs/1_53_0/libs/regex/doc/html/boost_regex/syntax.html
+
+formatString is also as understood by Boost:
+http://www.boost.org/doc/libs/1_42_0/libs/format/doc/format.html#syntax
+
+
+Example:
+Let's say you copied a bunch of songs from a buddy of yours.  But, this ignorant jackass uses some cockamamie 
+naming scheme for his files.  Or, worse, lets his files be named automatically by like iTunes or something.  
+Let's take a look!
+
+[~]$ cd new-gems
+[~/new-gems]$ ls
+10 Cross.mp3                      5 I Dig You.mp3                   
+1 Love Crushing.mp3               6 Mr. Bad.mp3
+2 Say The Word.mp3                7 You're So Much.mp3
+3 (I Feel Like An) Astronaut.mp3  8 Bonework.mp3
+4 Deep Blue.mp3                   9 Spot.mp3
+
+
+Unacceptable!  You want to bring these tracks in line with the Naming Convention of the People.  Run rxmv in report mode to try out a name fix:
+
+[~/new-gems]$ rxmv '(\d+)\s*(.*)\.(...)' '%1$02d - %2%.%3%' *
+10 Cross.mp3 --> 10 - Cross.mp3
+1 Love Crushing.mp3 --> 1 - Love Crushing.mp3
+[...]
+
+Looks good, we've gotten rid of the asinine lack of zero-padding on the numbers, and we've added in dash separators.  Here's how that worked:
+
+(\d+)\s*(.*)\.(...)   means:
+* match some number of digits and remember them
+* skip all whitespace after these digits
+* match any characters before the last period and remember them
+* skip over the last period
+* match three characters at the end and remember them
+
+%1$02d - %2%.%3%  means:
+* Print the first thing we remembered (digits), and zero-pad them to a width of two
+* Print a space, then a dash, then another space
+* Print the second thing we remembered (the song title), as is.
+* Print a period
+* Print the third thing we remembered (the file extension), as is.
+
+
+
+Since that looked good, now run the command to rename for real:
+[~/new-gems]$ rxmv -x '(\d+)\s*(.*)\.(...)' '%1$02d - %2%.%3%' *
+[~/new-gems]$ ls
+01 - Love Crushing.mp3               06 - Mr. Bad.mp3
+02 - Say The Word.mp3                07 - You're So Much.mp3
+03 - (I Feel Like An) Astronaut.mp3  08 - Bonework.mp3
+04 - Deep Blue.mp3                   09 - Spot.mp3
+05 - I Dig You.mp3                   10 - Cross.mp3
+
+
+Boom.  Done.  See how nice that looks?  Now you can share these gems with your subjects.
