@@ -18,9 +18,7 @@ http://www.boost.org/doc/libs/1_42_0/libs/format/doc/format.html#syntax
 
 
 Example:
-Let's say you copied a bunch of songs from a buddy of yours.  But, this ignorant jackass uses some cockamamie 
-naming scheme for his files.  Or, worse, lets his files be named automatically by like iTunes or something.  
-Let's take a look!
+Let's say you copied a bunch of songs from a buddy of yours.  But, this ignorant jackass uses some cockamamie naming scheme for his files.  Or, worse, lets his files be named automatically by like iTunes or something.  Let's take a look!
 
 [~]$ cd new-gems
 [~/new-gems]$ ls
@@ -67,3 +65,15 @@ Since that looked good, now run the command to rename for real:
 
 
 Boom.  Done.  See how nice that looks?  Now you can share these gems with your subjects.
+
+
+
+To compile, you're going to need to need the following:
+
+1) A compiler that understands C++11.
+2) Boost's regex, format, and filesystem libraries
+
+This line worked on my system:
+c++ --std=c++0x -g rrn.cpp -lboost_regex -lboost_filesystem -lboost_system -o rxmv
+
+Compilation details will vary based on your compiler and system.  But, the program should work on any platform.
