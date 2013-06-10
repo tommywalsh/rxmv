@@ -68,12 +68,12 @@ Boom.  Done.  See how nice that looks?  Now you can share these gems with your s
 
 
 
-To compile, you're going to need to need the following:
+To compile, you're going to need the following:
 
 1) A compiler that understands C++11.
 2) Boost's regex, format, and filesystem libraries
 
 This line worked on my system:
-c++ --std=c++0x -g rrn.cpp -lboost_regex -lboost_filesystem -lboost_system -o rxmv
+c++ --std=c++0x -g rxmv.cpp -lboost_regex -lboost_filesystem -lboost_system -o rxmv
 
 Compilation details will vary based on your compiler and system.  But, the program should work on any platform.
