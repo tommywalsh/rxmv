@@ -26,7 +26,7 @@ public:
         CANT_RENAME
     };
 
-    Renamer(std::string matchPattern, std::string renamePattern);
+    Renamer(const std::string& matchPattern, const std::string& renamePattern);
 
     bool isValid() const;
 
@@ -122,20 +122,22 @@ int main(int argc, const char **argv) {
                     std::cout << filenames[ix] << "\n";
                 }
                 break;
+            case Renamer::VALID:
+                assert(false);
         }
         return -1;
     }
 }
 
 
-Renamer::Renamer(std::string matchPattern, std::string renamePattern) {
+Renamer::Renamer(const std::string& matchPattern, const std::string& renamePattern) {
     try {
         m_matchRx = boost::regex{matchPattern};
         m_format = boost::format{renamePattern};
         m_status = VALID;
-    } catch (boost::bad_expression) {
+    } catch (boost::bad_expression&) {
         m_status = BAD_MATCH_PATTERN;
-    } catch (boost::io::bad_format_string) {
+    } catch (boost::io::bad_format_string&) {
         m_status = BAD_FORMAT_STRING;
     }
 }
@@ -165,10 +167,10 @@ void Renamer::loadRenameMap(const std::vector<std::string> &filenames) {
         auto filename = filenames[i];
         boost::cmatch match;
         if (boost::regex_match(filename.c_str(), match, m_matchRx)) {
-            for (auto i = 1; i < match.size(); ++i) {
-                m_format % match[i];
+            for (auto j = 1; j < match.size(); ++j) {
+                m_format % match[j];
             }
-            m_renameMap.push_back(std::make_pair(filename, m_format.str()));
+            m_renameMap.emplace_back(filename, m_format.str());
 
         } else {
             m_status = NO_MATCH;
@@ -186,7 +188,7 @@ void Renamer::doRename(const std::vector<std::string> &filenames, bool reallyRen
             if (reallyRename) {
                 try {
                     boost::filesystem::rename(renameRule.first, renameRule.second);
-                } catch (boost::filesystem::filesystem_error) {
+                } catch (boost::filesystem::filesystem_error&) {
                     m_status = CANT_RENAME;
                     m_badFiles.insert(i);
                 }
