@@ -73,7 +73,9 @@ To compile, you're going to need the following:
 1) A compiler that understands C++11.
 2) Boost's regex, format, and filesystem libraries
 
-This line worked on my system:
+The actual code should run on any system, but build/compilation details will vary based on your compiler and system.
+If your system has CMake, that should work. Or you can try a command line like this:
+```
 c++ --std=c++0x -g rxmv.cpp -lboost_regex -lboost_filesystem -lboost_system -o rxmv
+```
 
-Compilation details will vary based on your compiler and system.  But, the program should work on any platform.
